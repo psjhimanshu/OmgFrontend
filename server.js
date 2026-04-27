@@ -60,12 +60,13 @@ io.on("connection", (socket) => {
 
   // ⏭️ NEXT (SKIP)
   socket.on("next", () => {
-    if (socket.partner) {
-      socket.partner.emit("partnerDisconnected");
+    const partner = socket.partner;
 
-      socket.partner.partner = null;
-      socket.partner.roomId = null;
-    }
+if (partner) {
+  partner.emit("partnerDisconnected");
+  partner.roomId = null;
+  partner.partner = null;
+}
 
     socket.leave(socket.roomId);
     socket.partner = null;
@@ -92,13 +93,14 @@ io.on("connection", (socket) => {
       socket.emit("waiting");
     }
   });
-  
-  socket.on("stop", () => {
-  if (socket.partner) {
-    socket.partner.emit("partnerDisconnected");
 
-    socket.partner.partner = null;
-    socket.partner.roomId = null;
+  socket.on("stop", () => {
+  const partner = socket.partner;
+
+  if (partner) {
+    partner.emit("partnerDisconnected");
+    partner.partner = null;
+    partner.roomId = null;
   }
 
   socket.leave(socket.roomId);
@@ -114,10 +116,12 @@ io.on("connection", (socket) => {
       waitingUser = null;
     }
 
-    if (socket.partner) {
-      socket.partner.emit("partnerDisconnected");
-      socket.partner.partner = null;
-    }
+    const partner = socket.partner;
+
+  if (partner) {
+    partner.emit("partnerDisconnected");
+    partner.partner = null;
+  }
   });
 });
 
